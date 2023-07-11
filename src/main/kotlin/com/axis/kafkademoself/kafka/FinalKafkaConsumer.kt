@@ -3,7 +3,6 @@ package com.axis.kafkademoself.kafka
 import com.axis.kafkademoself.model.Agent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Service
 
@@ -19,12 +18,7 @@ class FinalKafkaConsumer(
 
     @KafkaListener(topics = ["final-topic1"], groupId = "myConsumerGrp")
     fun getAgentById(id:String){
-        logger.info("\n ---- GET AGENT BY ID ---- \n $id")
-    }
-
-    @KafkaListener(topics = ["final-topic1"], groupId = "myConsumerGrp")
-    fun deleteAgentById(id:String){
-        logger.info("\n ---- DELETE AGENT BY ID ---- \n $id")
+        logger.info("\n ---- AGENT BY ID ---- \n $id")
     }
 
 

@@ -49,7 +49,7 @@ class KafkaMessageController (
     @PostMapping("/add-agent")
     fun addAgent(@RequestBody agent: Agent):Mono<Agent>{
         finalKafkaProducer.postAgent(agent)
-        println("Agent with body -> $agent | sent to topic | sent to DB")
+        //println("Agent with body -> $agent | sent to topic | sent to DB")
         return agentService.addAgent(agent)
     }
 

@@ -42,6 +42,7 @@ class FinalKafkaProducer(
 
     // For Getting Agent By Id
     fun getAgentById(id: String){
+        logger.info(String.format("Get Agent By ID:$id"))
         var msg:Message<String> = MessageBuilder.withPayload("Find Agent with ID: $id")
             .setHeader(KafkaHeaders.TOPIC,"final-topic1")
             .build()

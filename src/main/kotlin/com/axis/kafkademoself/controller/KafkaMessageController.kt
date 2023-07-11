@@ -22,7 +22,7 @@ class KafkaMessageController (
     private val agentService: AgentService,
     private val kafkaTopicConfig: KafkaTopicConfig
         ) {
-
+    val jsonTopicName = kafkaTopicConfig.jcNewTopic().name().toString()
     // http://localhost:6500/api/v1/kafka/publish?message=<Any message here>
     @GetMapping("/publish")
     fun publishMessage( @RequestParam("message") message:String ):ResponseEntity<String>{
@@ -33,9 +33,8 @@ class KafkaMessageController (
 
     @PostMapping("/json-publish")
     fun publishJsonData(@RequestBody agent: Agent):ResponseEntity<String>{
-        val topicName = kafkaTopicConfig.jcNewTopic().name().toString()
         jsonKafkaProducer.sendJsonMessage(agent)
-        return ResponseEntity.ok("Json Body Sent to $topicName")
+        return ResponseEntity.ok("Json Body Sent to $jsonTopicName")
     }
 
     @GetMapping("/get-all-agents")
@@ -45,7 +44,28 @@ class KafkaMessageController (
 
     @PostMapping("/add-agent")
     fun addAgent(@RequestBody agent: Agent):Mono<Agent>{
+        jsonKafkaProducer.sendJsonMessage(agent)
+        println("Agent with body -> $agent | sent to $jsonTopicName | sent to DB")
         return agentService.addAgent(agent)
+    }
+
+    @GetMapping("/agent-id/{id}")
+    fun getAgentById(@PathVariable id:String):Mono<Agent>{
+        kafkaProducer.sendMessage("Request for finding agent with id -> $id")
+        return agentService.getAgentById(id)
+    }
+
+    @PutMapping("/update-agent/{id}")
+    fun updateAgent(@PathVariable id: String, @RequestBody agent: Agent):Mono<Agent>{
+        jsonKafkaProducer.sendJsonMessage(agent)
+        println("Agent updated with id -> $id | with body $agent")
+        return agentService.updateAgent(id,agent)
+    }
+
+    @DeleteMapping("/delete/{id}")
+    fun deleteAgent(id: String):Mono<Void>{
+        kafkaProducer.sendMessage("Agent with id -> $id, deleted successfully.")
+        return agentService.deleteAgentById(id)
     }
 
 }

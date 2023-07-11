@@ -25,7 +25,7 @@ class KafkaTopicConfig {
 
     @Bean
     fun finalTopic():NewTopic{
-        return TopicBuilder.name("final-topic")
+        return TopicBuilder.name("final-topic1")
             .partitions(2)
             .build()
     }

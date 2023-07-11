@@ -1,6 +1,7 @@
 package com.axis.kafkademoself.controller
 
 import com.axis.kafkademoself.config.KafkaTopicConfig
+import com.axis.kafkademoself.kafka.FinalKafkaProducer
 import com.axis.kafkademoself.kafka.JsonKafkaProducer
 import com.axis.kafkademoself.kafka.KafkaProducer
 import com.axis.kafkademoself.model.Agent
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toFlux
 
 @RestController
 @RequestMapping("/api/v1/kafka")
@@ -18,6 +20,7 @@ class KafkaMessageController (
     //constructor based dependency injection
     @Autowired
     private val kafkaProducer: KafkaProducer,
+    private val finalKafkaProducer: FinalKafkaProducer,
     private val jsonKafkaProducer: JsonKafkaProducer,
     private val agentService: AgentService,
     private val kafkaTopicConfig: KafkaTopicConfig
@@ -39,32 +42,33 @@ class KafkaMessageController (
 
     @GetMapping("/get-all-agents")
     fun getAllAgents():Flux<Agent>{
+        finalKafkaProducer.findAllAgents()
         return agentService.getAllAgents()
     }
 
     @PostMapping("/add-agent")
     fun addAgent(@RequestBody agent: Agent):Mono<Agent>{
-        jsonKafkaProducer.sendJsonMessage(agent)
-        println("Agent with body -> $agent | sent to $jsonTopicName | sent to DB")
+        finalKafkaProducer.postAgent(agent)
+        println("Agent with body -> $agent | sent to topic | sent to DB")
         return agentService.addAgent(agent)
     }
 
     @GetMapping("/agent-id/{id}")
     fun getAgentById(@PathVariable id:String):Mono<Agent>{
-        kafkaProducer.sendMessage("Request for finding agent with id -> $id")
+        finalKafkaProducer.getAgentById(id)
         return agentService.getAgentById(id)
     }
 
     @PutMapping("/update-agent/{id}")
     fun updateAgent(@PathVariable id: String, @RequestBody agent: Agent):Mono<Agent>{
-        jsonKafkaProducer.sendJsonMessage(agent)
+        finalKafkaProducer.updatedAgent(agent)
         println("Agent updated with id -> $id | with body $agent")
         return agentService.updateAgent(id,agent)
     }
 
     @DeleteMapping("/delete/{id}")
     fun deleteAgent(id: String):Mono<Void>{
-        kafkaProducer.sendMessage("Agent with id -> $id, deleted successfully.")
+        finalKafkaProducer.deleteAgent("Agent with id -> $id, deleted successfully.")
         return agentService.deleteAgentById(id)
     }
 

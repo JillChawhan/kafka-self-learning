@@ -17,14 +17,15 @@ class FinalKafkaConsumer(
         logger.info(String.format("---- POSTED MESSAGE CONSUMED ---- \n ${agent.toString()}"))
     }
 
-//    @KafkaListener(topics = ["final-topic1"], groupId = "myConsumerGrp")
-//    fun consumeUpdatedAgent(id: String,agent: Agent){
-//        logger.info()
-//    }
-
     @KafkaListener(topics = ["final-topic1"], groupId = "myConsumerGrp")
     fun getAgentById(id:String){
-        logger.info(String.format("Getting Agent with ID:$id"))
+        logger.info("\n ---- GET AGENT BY ID ---- \n $id")
     }
+
+    @KafkaListener(topics = ["final-topic1"], groupId = "myConsumerGrp")
+    fun deleteAgentById(id:String){
+        logger.info("\n ---- DELETE AGENT BY ID ---- \n $id")
+    }
+
 
 }

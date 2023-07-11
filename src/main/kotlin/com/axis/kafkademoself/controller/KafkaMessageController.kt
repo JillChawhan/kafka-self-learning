@@ -62,13 +62,12 @@ class KafkaMessageController (
     @PutMapping("/update-agent/{id}")
     fun updateAgent(@PathVariable id: String, @RequestBody agent: Agent):Mono<Agent>{
         finalKafkaProducer.updatedAgent(agent)
-        println("Agent updated with id -> $id | with body $agent")
         return agentService.updateAgent(id,agent)
     }
 
     @DeleteMapping("/delete/{id}")
-    fun deleteAgent(id: String):Mono<Void>{
-        finalKafkaProducer.deleteAgent("Agent with id -> $id, deleted successfully.")
+    fun deleteAgent(@PathVariable id: String):Mono<Void>{
+        finalKafkaProducer.deleteAgent(id)
         return agentService.deleteAgentById(id)
     }
 

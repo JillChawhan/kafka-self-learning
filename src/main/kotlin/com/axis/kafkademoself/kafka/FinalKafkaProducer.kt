@@ -22,7 +22,7 @@ class FinalKafkaProducer(
     fun postAgent(agent: Agent){
         logger.info(String.format("Agent Data Sent ==> $agent"))
 
-        var msg:Message<Agent> = MessageBuilder.withPayload(agent)
+        var msg:Message<String> = MessageBuilder.withPayload("Added new Agent -> ${agent.toString()}")
             .setHeader(KafkaHeaders.TOPIC,"final-topic1")
             .build()
 
@@ -32,16 +32,19 @@ class FinalKafkaProducer(
     // For Getting All Agents
     fun findAllAgents(){
         logger.info(String.format("Getting All Agents..."))
+
+        var msg:Message<String> = MessageBuilder.withPayload("Finding All Agents...")
+            .setHeader(KafkaHeaders.TOPIC,"final-topic1")
+            .build()
+
+        kafkaTemplate.send(msg)
     }
 
     // For Getting Agent By Id
     fun getAgentById(id: String){
-        logger.info(String.format("Getting Agent with ID:$id"))
-
-        var msg:Message<String> = MessageBuilder.withPayload(id)
+        var msg:Message<String> = MessageBuilder.withPayload("Find Agent with ID: $id")
             .setHeader(KafkaHeaders.TOPIC,"final-topic1")
             .build()
-
         kafkaTemplate.send(msg)
     }
 
@@ -49,7 +52,7 @@ class FinalKafkaProducer(
     fun updatedAgent(agent: Agent){
         logger.info(String.format("Updated Agent Details -> $agent"))
 
-        var msg:Message<Agent> = MessageBuilder.withPayload(agent)
+        var msg:Message<String> = MessageBuilder.withPayload("Updated Agent -> ${agent.toString()}")
             .setHeader(KafkaHeaders.TOPIC,"final-topic1")
             .build()
 
@@ -58,9 +61,9 @@ class FinalKafkaProducer(
 
     // For Deleting Agent
     fun deleteAgent(id:String){
-        logger.info(String.format("Deleting agent with ID:$id ..."))
+//        logger.info(String.format("Deleting agent with ID:$id ..."))
 
-        var msg:Message<String> = MessageBuilder.withPayload(id)
+        var msg:Message<String> = MessageBuilder.withPayload("Deleted Agent with ID: $id")
             .setHeader(KafkaHeaders.TOPIC,"final-topic1")
             .build()
 

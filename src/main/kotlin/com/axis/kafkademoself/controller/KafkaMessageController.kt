@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toFlux
 
 @RestController
 @RequestMapping("/api/v1/kafka")
@@ -40,14 +39,12 @@ class KafkaMessageController (
         return ResponseEntity.ok("Json Body Sent to $jsonTopicName")
     }
 
-    // ISSUE WHILE GETTING ALL AGENTS
     @GetMapping("/get-all-agents")
     fun getAllAgents():Flux<Agent>{
         finalKafkaProducer.findAllAgents()
         return agentService.getAllAgents()
     }
 
-    // Issue while POSTING AGENT
     @PostMapping("/add-agent")
     fun addAgent(@RequestBody agent: Agent):Mono<Agent>{
         finalKafkaProducer.postAgent(agent)
@@ -55,7 +52,6 @@ class KafkaMessageController (
         return agentService.addAgent(agent)
     }
 
-    // Issue while GETTING AGENT BY ID
     @GetMapping("/agent-id/{id}")
     fun getAgentById(@PathVariable id:String):Mono<Agent>{
         finalKafkaProducer.getAgentById(id)

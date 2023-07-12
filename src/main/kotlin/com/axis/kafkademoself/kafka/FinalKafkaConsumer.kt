@@ -4,6 +4,7 @@ import com.axis.kafkademoself.model.Agent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.kafka.config.KafkaListenerContainerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,8 +19,12 @@ class FinalKafkaConsumer(
 
     @KafkaListener(topics = ["final-topic1"], groupId = "myConsumerGrp")
     fun getAgentById(id:String){
-        logger.info("\n ---- AGENT BY ID ---- \n $id")
+        logger.info(String.format("---- AGENT BY ID ---- \n $id"))
     }
 
+    @KafkaListener(topics = ["final-topic"], groupId = "myConsumerGrp")
+    fun updateAgent(agent: Agent,id: String){
+        logger.info(String.format("---- UPDATED AGENT ----\n $id"))
+    }
 
 }

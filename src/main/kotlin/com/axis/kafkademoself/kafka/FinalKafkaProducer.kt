@@ -50,10 +50,10 @@ class FinalKafkaProducer(
     }
 
     // For Updating Agent
-    fun updatedAgent(agent: Agent){
-        logger.info(String.format("Updated Agent Details -> $agent"))
+    fun updatedAgent(id: String,agent: Agent){
+        logger.info(String.format("Updated Agent Details (Agent ID: $id)-> $agent"))
 
-        var msg:Message<String> = MessageBuilder.withPayload("Updated Agent -> ${agent.toString()}")
+        var msg:Message<String> = MessageBuilder.withPayload("Updated Agent (ID:$id) -> ${agent.toString()}")
             .setHeader(KafkaHeaders.TOPIC,"final-topic1")
             .build()
 

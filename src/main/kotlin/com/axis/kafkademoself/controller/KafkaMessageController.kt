@@ -40,12 +40,14 @@ class KafkaMessageController (
         return ResponseEntity.ok("Json Body Sent to $jsonTopicName")
     }
 
+    // ISSUE WHILE GETTING ALL AGENTS
     @GetMapping("/get-all-agents")
     fun getAllAgents():Flux<Agent>{
         finalKafkaProducer.findAllAgents()
         return agentService.getAllAgents()
     }
 
+    // Issue while POSTING AGENT
     @PostMapping("/add-agent")
     fun addAgent(@RequestBody agent: Agent):Mono<Agent>{
         finalKafkaProducer.postAgent(agent)
@@ -53,6 +55,7 @@ class KafkaMessageController (
         return agentService.addAgent(agent)
     }
 
+    // Issue while GETTING AGENT BY ID
     @GetMapping("/agent-id/{id}")
     fun getAgentById(@PathVariable id:String):Mono<Agent>{
         finalKafkaProducer.getAgentById(id)
@@ -61,7 +64,7 @@ class KafkaMessageController (
 
     @PutMapping("/update-agent/{id}")
     fun updateAgent(@PathVariable id: String, @RequestBody agent: Agent):Mono<Agent>{
-        finalKafkaProducer.updatedAgent(agent)
+        finalKafkaProducer.updatedAgent(id,agent)
         return agentService.updateAgent(id,agent)
     }
 
